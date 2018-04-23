@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#E91E63</color>
+    <color name="colorPrimaryDark">#C2185B</color>
+    <color name="colorAccent">#4CAF50</color>
+    <color name="red">#ff00</color>
+    <color name="orange">#F96A1B</color>
+    <color name="blue">#4169E1</color>
+    <color name="black">#000000</color>
+    <color name="darktintimage">#80000000</color>
+    <color name="pink">#F50057</color>
+    <color name="cyan">#00BCD4</color>
+    <color name="green">#4CAF50</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="greytint">#7a7a7a</color>
+    <color name="skyblue">#87b1eb</color>
+    <color name="cover_photo_grey">#D3D3D3</color>
+    <color name="join_color">#35A2EA</color>
+
+    <color name="top_bar_background">#F58535</color>
+    <color name="splash_text">#F58535</color>
+    <color name="splash_background">#FFFFFF</color>
+    <color name="main_background">#FFFFFF</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="nav_drawer_background">#FFFFFF</color>
+    <color name="nav_drawer_top_background">#CCCCCC</color>
+    <color name="nav_drawer_no_user_background">#AAAAAA</color>
+    <color name="instructions_list_border_color">#FFDDDDDD</color>
+    <color name="grey_light">#F5F7F7</color>
+    <color name="text_border_default">#303232</color>
+    <color name="bots_request_color">#2A5C91</color>
+    <color name="bots_response_color">#329AD6</color>
+    <color name="grey">#e2e2e2</color>
+    <color name="verylightgrey">#ebebeb</color>
+</resources>
