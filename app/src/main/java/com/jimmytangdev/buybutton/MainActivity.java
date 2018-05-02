@@ -143,16 +143,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Will make the request for the purchaseItem at your Cloud Code
     private void charge(Token cardToken){
-        // Create the parameters that will be passed to your
-        // Cloud Code function
-        // Configure your parameters here
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("ItemName", "NakedYoga");
+        params.put("itemName", "NakedYoga"); //This part you need to pass your item detail, implement yourself
         params.put("cardToken", cardToken.getId());
-        params.put("name","ClientName");
-        params.put("email","ClientEmail@gmail.com");
+        params.put("name","Your Name");
+        params.put("email","youremail@email.com");
         params.put("address","HIHI");
         params.put("zip","99999");
         params.put("city_state","CA");
