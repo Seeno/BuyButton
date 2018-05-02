@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         // Cloud Code function
         // Configure your parameters here
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("ItemName", "test");
+        params.put("ItemName", "NakedYoga");
         params.put("cardToken", cardToken.getId());
         params.put("name","ClientName");
         params.put("email","ClientEmail@gmail.com");
