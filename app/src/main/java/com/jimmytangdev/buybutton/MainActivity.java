@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         );
 
         TextView seeMore = findViewById(R.id.see_more);
-        final EditText ticketPrice = findViewById(R.id.ticket_price);
         Button buyTicket = findViewById(R.id.buy_tickets);
         TextView titleTextView = findViewById(R.id.idea_detail_title);
         final String title = titleTextView.getText().toString();
@@ -86,12 +85,7 @@ public class MainActivity extends AppCompatActivity {
         buyTicket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int ticketPriceNum;
-                if (ticketPrice == null || ticketPrice.getText().toString().equals("")) {
-                    ticketPriceNum = 70;
-                } else {
-                    ticketPriceNum = Integer.parseInt(ticketPrice.getText().toString());
-                }
+                int ticketPriceNum = 70;
                 AlertDialog.Builder builder;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
@@ -149,12 +143,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Will make the request for the purchaseItem at your Cloud Code
     private void charge(Token cardToken){
+        // Create the parameters that will be passed to your
+        // Cloud Code function
+        // Configure your parameters here
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("itemName", "test"); //This part you need to pass your item detail, implement yourself
+        params.put("ItemName", "test");
         params.put("cardToken", cardToken.getId());
-        params.put("name","Dominic Wong");
-        params.put("email","dominwong4@gmail.com");
+        params.put("name","ClientName");
+        params.put("email","ClientEmail@gmail.com");
         params.put("address","HIHI");
         params.put("zip","99999");
         params.put("city_state","CA");
