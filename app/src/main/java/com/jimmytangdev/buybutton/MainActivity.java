@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,8 +23,10 @@ import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
+import com.stripe.android.view.CardInputWidget;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,13 +53,6 @@ public class MainActivity extends AppCompatActivity {
         progress = new ProgressDialog(this);
 
 
-        card = new Card(
-                "4242424242424242", //card number
-                12, //expMonth
-                2020,//expYear
-                "123"//cvc
-        );
-
         TextView seeMore = findViewById(R.id.see_more);
         Button buyTicket = findViewById(R.id.buy_tickets);
         TextView titleTextView = findViewById(R.id.idea_detail_title);
@@ -82,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final LayoutInflater inflater = this.getLayoutInflater();
+
         buyTicket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,7 +94,49 @@ public class MainActivity extends AppCompatActivity {
                 builder.setMessage("Purchase tickets for " + title + " at $" + ticketPriceNum + "?");
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        buy();
+
+                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+                        View dialogView = inflater.inflate(R.layout.card_widget, null);
+                        dialogBuilder.setView(dialogView);
+                        final AlertDialog alertDialog = dialogBuilder.create();
+
+                        final CardInputWidget mCardInputWidget = (CardInputWidget) dialogView.findViewById(R.id.card_input_widget);
+                        Button defaultCC = (Button) dialogView.findViewById(R.id.default_cc);
+                        Button next = (Button) dialogView.findViewById(R.id.next);
+                        final TextView error = (TextView) dialogView.findViewById(R.id.errorMessage);
+
+                        defaultCC.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mCardInputWidget.setCardNumber("4242424242424242");
+                                mCardInputWidget.setCvcCode("123");
+                                mCardInputWidget.setExpiryDate(12,2020);
+                            }
+                        });
+
+                        next.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                error.setVisibility(View.GONE);
+                                if (mCardInputWidget.getCard() == null)
+                                {
+                                    error.setText("Invalid Card Information");
+                                    error.setVisibility(View.VISIBLE);
+                                }
+                                else
+                                {
+                                    card = new Card(
+                                            mCardInputWidget.getCard().getNumber(), //card number
+                                            mCardInputWidget.getCard().getExpMonth(),
+                                            mCardInputWidget.getCard().getExpYear(),
+                                            mCardInputWidget.getCard().getCVC()
+                                    );
+                                    buy(card);
+                                    alertDialog.cancel();
+                                }
+                            }
+                        });
+                        alertDialog.show();
 
                         // insert stripe related properties here
                     }
@@ -113,9 +153,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    private void buy(){
+
+    private void buy(Card card) {
         boolean validation = card.validateCard();
-        if(validation){
+        if (validation) {
             startProgress("Validating Credit Card");
             new Stripe(this).createToken(
                     card,
@@ -123,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                     new TokenCallback() {
                         @Override
                         public void onError(Exception error) {
-                            Log.d("Stripe",error.toString());
+                            Log.d("Stripe", error.toString());
                         }
 
                         @Override
@@ -133,25 +174,25 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         } else if (!card.validateNumber()) {
-            Log.d("Stripe","The card number that you entered is invalid");
+            Log.d("Stripe", "The card number that you entered is invalid");
         } else if (!card.validateExpiryDate()) {
-            Log.d("Stripe","The expiration date that you entered is invalid");
+            Log.d("Stripe", "The expiration date that you entered is invalid");
         } else if (!card.validateCVC()) {
-            Log.d("Stripe","The CVC code that you entered is invalid");
+            Log.d("Stripe", "The CVC code that you entered is invalid");
         } else {
-            Log.d("Stripe","The card details that you entered are invalid");
+            Log.d("Stripe", "The card details that you entered are invalid");
         }
     }
 
-    private void charge(Token cardToken){
+    private void charge(Token cardToken) {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("itemName", "NakedYoga"); //This part you need to pass your item detail, implement yourself
         params.put("cardToken", cardToken.getId());
-        params.put("name","Your Name");
-        params.put("email","youremail@email.com");
-        params.put("address","HIHI");
-        params.put("zip","99999");
-        params.put("city_state","CA");
+        params.put("name", "Your Name");
+        params.put("email", "youremail@email.com");
+        params.put("address", "HIHI");
+        params.put("zip", "99999");
+        params.put("city_state", "CA");
         startProgress("Purchasing Item");
         ParseCloud.callFunctionInBackground("purchaseItem", params, new FunctionCallback<Object>() {
             public void done(Object response, ParseException e) {
@@ -170,12 +211,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void startProgress(String title){
+
+    private void startProgress(String title) {
         progress.setTitle(title);
         progress.setMessage("Please Wait");
         progress.show();
     }
-    private void finishProgress(){
+
+    private void finishProgress() {
         progress.dismiss();
     }
 
